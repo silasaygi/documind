@@ -1,0 +1,36 @@
+{
+  "name": "documind",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+     "types": "supabase gen types typescript --project-id twzfwxbmxtiygligvesj --schema public > src/types/database.types.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^4.0.34",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.0",
+    "ai": "^7.0.52",
+    "next": "16.3.0",
+    "pdf-parse": "^2.4.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
+    "supabase": "^2.111.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

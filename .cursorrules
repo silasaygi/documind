@@ -1,0 +1,21 @@
+# DocuMind AI — proje kuralları
+
+## Güvenlik (ihlal edilemez)
+- service_role anahtarı SADECE src/lib/supabase/admin.ts içinde kullanılır.
+- Client Component içinde hiçbir gizli anahtar kullanılmaz.
+- Yeni tablo eklenirse RLS politikası aynı migration içinde yazılır.
+- Vektör araması yalnızca match_documents RPC ile yapılır.
+
+## Mimari
+- Veri erişimi src/lib/supabase üzerinden. Doğrudan fetch ile Supabase REST çağrılmaz.
+- LLM ve embedding çağrıları src/lib/ai altında toplanır, bileşen içine yazılmaz.
+- Sağlayıcı: Google Gemini (@ai-sdk/google). Embedding: text-embedding-004, 768 boyut.
+- Server Component varsayılandır; "use client" sadece etkileşim gereken bileşenlerde.
+- pdf-parse kullanan route'lar Node runtime'da çalışır: export const runtime = 'nodejs'
+- Storage yolu her zaman `${user.id}/${documentId}.${ext}` biçimindedir.
+
+## Kod
+- TypeScript strict, `any` kullanma.
+- Supabase tipleri elle yazılmaz, `npm run types` ile üretilir.
+- match_documents tipleri src/types/rpc.ts içinde elle tutulur.
+- Kullanıcıya gösterilen metinler Türkçe, değişken ve fonksiyon adları İngilizce.
