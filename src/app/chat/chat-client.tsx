@@ -2,7 +2,7 @@
 
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, type UIMessage } from 'ai'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function ChatClient({
   conversationId,
@@ -21,6 +21,12 @@ export function ChatClient({
   })
 
   const busy = status === 'streaming' || status === 'submitted'
+
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -106,6 +112,7 @@ export function ChatClient({
             deneyin.
           </p>
         )}
+        <div ref={bottomRef} />
       </div>
 
       <form

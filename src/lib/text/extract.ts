@@ -6,8 +6,10 @@ export async function extractText(
   fileName: string
 ): Promise<string> {
   if (mimeType === 'application/pdf' || fileName.toLowerCase().endsWith('.pdf')) {
-    const pdfParse = (await import('pdf-parse')).default
-    const result = await pdfParse(buffer)
+    const mod: Record<string, unknown> = await import('pdf-parse')
+    const candidate = mod.pdf ?? mod.default ?? mod
+    const parse = candidate as (b: Buffer) => Promise<{ text: string }>
+    const result = await parse(buffer)
     return result.text
   }
 

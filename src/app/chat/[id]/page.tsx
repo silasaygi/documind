@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { ChatClient } from '../chat-client'
 import { ConversationList } from '../conversation-list'
 import type { UIMessage } from 'ai'
+import { deleteConversation } from '../actions'
 
 export default async function ConversationPage({
   params,
@@ -53,6 +54,14 @@ export default async function ConversationPage({
 
       <main className="mx-auto max-w-3xl px-6 py-6">
         <ConversationList activeId={id} />
+        <form
+          action={deleteConversation.bind(null, id)}
+          className="mb-3"
+        >
+          <button className="text-xs text-neutral-500 hover:text-red-600">
+            Bu sohbeti sil
+          </button>
+        </form>
         <ChatClient conversationId={id} initialMessages={initialMessages} />
       </main>
     </div>

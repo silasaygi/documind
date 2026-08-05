@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { searchChunks } from '@/lib/ai/search'
 import { SYSTEM_PROMPT, buildContextBlock } from '@/lib/ai/prompts'
+import type { Json } from '@/types/database.types'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
       conversation_id: conversationId,
       user_id: user.id,
       role: 'user',
-      parts: lastUserMessage.parts,
+      parts: lastUserMessage.parts as unknown as Json,
     })
   }
   const modelMessages = await convertToModelMessages(messages)
@@ -118,8 +119,8 @@ export async function POST(request: Request) {
         .map((m) => ({
           conversation_id: conversationId,
           user_id: user.id,
-          role: m.role,
-          parts: m.parts,
+          role: m.role as string,
+          parts: m.parts as unknown as Json,
         }))
 
       await supabaseAdmin.from('messages').insert(rows)

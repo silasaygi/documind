@@ -1,6 +1,7 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useEffect, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { deleteDocument } from './actions'
 
 type Doc = {
@@ -28,6 +29,13 @@ const STATUS_STYLE: Record<string, string> = {
 
 export function DocumentRow({ doc }: { doc: Doc }) {
   const [pending, startTransition] = useTransition()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (doc.status !== 'pending' && doc.status !== 'processing') return
+    const timer = setInterval(() => router.refresh(), 3000)
+    return () => clearInterval(timer)
+  }, [doc.status, router])
 
   return (
     <li className="px-5 py-4">
@@ -49,7 +57,10 @@ export function DocumentRow({ doc }: { doc: Doc }) {
             {STATUS_LABEL[doc.status] ?? doc.status}
           </span>
           <button
-            onClick={() => startTransition(() => deleteDocument(doc.id))}
+            onClick={() => {
+              if (!confirm(`"${doc.title}" silinecek. Emin misiniz?`)) return
+              startTransition(() => deleteDocument(doc.id))
+            }}
             disabled={pending}
             className="text-xs text-neutral-500 hover:text-red-600 disabled:opacity-50"
           >

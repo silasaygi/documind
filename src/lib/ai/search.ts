@@ -9,7 +9,10 @@ export async function searchChunks(
 ): Promise<MatchDocumentsRow[]> {
   const { threshold = 0.35, count = 5 } = options
 
-  const embedding = await embedQuery(query)
+  const trimmed = query.trim()
+  if (trimmed.length < 3) return []
+
+  const embedding = await embedQuery(trimmed.slice(0, 2000))
   const supabase = await createClient()
 
   const { data, error } = await supabase.rpc('match_documents', {
@@ -19,8 +22,9 @@ export async function searchChunks(
   } as never)
 
   if (error) {
-    console.error('Vektör araması hatası:', error.message) 
+    console.error('Vektör araması hatası:', error.message)
     return []
   }
+
   return (data ?? []) as MatchDocumentsRow[]
 }
