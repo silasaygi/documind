@@ -1,4 +1,4 @@
-import { streamText, convertToModelMessages, tool, type UIMessage } from 'ai'
+import { streamText, convertToModelMessages, stepCountIs, tool, type UIMessage } from 'ai'
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
@@ -13,13 +13,22 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return new Response('Yetkisiz', { status: 401 })
 
-  const { messages }: { messages: UIMessage[] } = await request.json()
+  const body = await request.json()
+  const raw = body?.messages ?? []
+  const messages: UIMessage[] = Array.isArray(raw) ? raw : [raw]
+
+  if (!messages.length) {
+    return new Response('Mesaj bulunamadı', { status: 400 })
+  }
+
+  const modelMessages = await convertToModelMessages(messages)
 
   const result = streamText({
-    model: google('gemini-2.0-flash'),
+    model: google(process.env.GEMINI_CHAT_MODEL ?? 'gemini-flash-lite-latest'),
     system: SYSTEM_PROMPT,
-    messages: convertToModelMessages(messages),
-    stopWhen: ({ steps }) => steps.length >= 4,
+    messages: modelMessages,
+    stopWhen: stepCountIs(2),
+    maxRetries: 1,
     tools: {
       searchDocuments: tool({
         description:

@@ -19,9 +19,8 @@ export async function searchChunks(
   } as never)
 
   if (error) {
-    console.error('Vektör araması hatası:', error.message)
+    console.error('Vektör araması hatası:', error.message) 
     return []
   }
-
   return (data ?? []) as MatchDocumentsRow[]
 }
