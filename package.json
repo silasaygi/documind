@@ -7,10 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-     "types": "supabase gen types typescript --project-id twzfwxbmxtiygligvesj --schema public > src/types/database.types.ts"
+    "types": "supabase gen types typescript --project-id twzfwxbmxtiygligvesj --schema public > src/types/database.types.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.34",
+    "@ai-sdk/react": "^4.0.55",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.0",
     "ai": "^7.0.52",
