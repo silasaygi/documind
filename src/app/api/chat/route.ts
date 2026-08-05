@@ -2,6 +2,7 @@ import { streamText, convertToModelMessages, stepCountIs, tool, type UIMessage }
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 import { searchChunks } from '@/lib/ai/search'
 import { SYSTEM_PROMPT, buildContextBlock } from '@/lib/ai/prompts'
 
@@ -21,6 +22,36 @@ export async function POST(request: Request) {
     return new Response('Mesaj bulunamadı', { status: 400 })
   }
 
+  let conversationId: string | null = body?.conversationId ?? null
+
+  if (!conversationId) {
+    const firstText = messages
+      .find((m) => m.role === 'user')
+      ?.parts?.find((p) => p.type === 'text')
+
+    const title =
+      firstText && 'text' in firstText
+        ? String(firstText.text).slice(0, 60)
+        : 'Yeni sohbet'
+
+    const { data: conv } = await supabaseAdmin
+      .from('conversations')
+      .insert({ user_id: user.id, title })
+      .select('id')
+      .single()
+
+    conversationId = conv?.id ?? null
+  }
+  const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user')
+
+  if (conversationId && lastUserMessage) {
+    await supabaseAdmin.from('messages').insert({
+      conversation_id: conversationId,
+      user_id: user.id,
+      role: 'user',
+      parts: lastUserMessage.parts,
+    })
+  }
   const modelMessages = await convertToModelMessages(messages)
 
   const result = streamText({
@@ -77,5 +108,25 @@ export async function POST(request: Request) {
     },
   })
 
-  return result.toUIMessageStreamResponse()
+  return result.toUIMessageStreamResponse({
+    headers: conversationId ? { 'x-conversation-id': conversationId } : undefined,
+    onFinish: async ({ messages: finalMessages }) => {
+      if (!conversationId) return
+
+      const rows = finalMessages
+        .filter((m) => m.role === 'assistant')
+        .map((m) => ({
+          conversation_id: conversationId,
+          user_id: user.id,
+          role: m.role,
+          parts: m.parts,
+        }))
+
+      await supabaseAdmin.from('messages').insert(rows)
+      await supabaseAdmin
+        .from('conversations')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', conversationId)
+    },
+  })
 }

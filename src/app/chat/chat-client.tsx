@@ -1,13 +1,23 @@
 'use client'
 
 import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport } from 'ai'
+import { DefaultChatTransport, type UIMessage } from 'ai'
 import { useState } from 'react'
 
-export function ChatClient() {
+export function ChatClient({
+  conversationId,
+  initialMessages = [],
+}: {
+  conversationId?: string
+  initialMessages?: UIMessage[]
+}) {
   const [input, setInput] = useState('')
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: '/api/chat' }),
+  const { messages, sendMessage, status, error } = useChat({
+    messages: initialMessages,
+    transport: new DefaultChatTransport({
+      api: '/api/chat',
+      body: conversationId ? { conversationId } : undefined,
+    }),
   })
 
   const busy = status === 'streaming' || status === 'submitted'
@@ -20,7 +30,7 @@ export function ChatClient() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-9rem)] flex-col">
+    <div className="flex h-[calc(100vh-12rem)] flex-col">
       <div className="flex-1 space-y-4 overflow-y-auto pb-4">
         {!messages.length && (
           <div className="rounded-xl border border-dashed border-neutral-300 bg-white p-10 text-center">
@@ -50,25 +60,58 @@ export function ChatClient() {
                     </p>
                   )
                 }
+
                 if (part.type === 'tool-searchDocuments') {
+                  if (part.state !== 'output-available') {
+                    return (
+                      <p key={i} className="mb-2 text-xs text-neutral-400">
+                        Dokümanlarda aranıyor...
+                      </p>
+                    )
+                  }
+
+                  const output = part.output as {
+                    found: boolean
+                    sources?: { index: number; title: string; similarity: number }[]
+                  }
+
+                  if (!output.found || !output.sources?.length) return null
+
                   return (
-                    <p key={i} className="mb-2 text-xs text-neutral-400">
-                      Dokümanlarda aranıyor...
-                    </p>
+                    <div key={i} className="mb-3 flex flex-wrap gap-1.5">
+                      {output.sources.map((s) => (
+                        <span
+                          key={s.index}
+                          title={`Benzerlik: ${(s.similarity * 100).toFixed(0)}%`}
+                          className="rounded-md bg-neutral-100 px-2 py-1 text-xs text-neutral-600"
+                        >
+                          [{s.index}] {s.title}
+                        </span>
+                      ))}
+                    </div>
                   )
                 }
+
                 return null
               })}
             </div>
           </div>
         ))}
 
-        {busy && (
-          <p className="text-sm text-neutral-400">Yanıt hazırlanıyor...</p>
+        {busy && <p className="text-sm text-neutral-400">Yanıt hazırlanıyor...</p>}
+
+        {error && (
+          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            Yanıt alınamadı. Model kotası dolmuş olabilir, birkaç dakika sonra tekrar
+            deneyin.
+          </p>
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 border-t border-neutral-200 pt-4">
+      <form
+        onSubmit={handleSubmit}
+        className="flex gap-2 border-t border-neutral-200 pt-4"
+      >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}

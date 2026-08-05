@@ -1,18 +1,39 @@
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { ChatClient } from './chat-client'
-import { ConversationList } from './conversation-list'
+import { ChatClient } from '../chat-client'
+import { ConversationList } from '../conversation-list'
+import type { UIMessage } from 'ai'
 
-export default async function ChatPage() {
+export default async function ConversationPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { count } = await supabase
-    .from('documents')
-    .select('id', { count: 'exact', head: true })
-    .eq('status', 'ready')
+  const { data: conversation } = await supabase
+    .from('conversations')
+    .select('id, title')
+    .eq('id', id)
+    .single()
+
+  if (!conversation) notFound()
+
+  const { data: rows } = await supabase
+    .from('messages')
+    .select('id, role, parts')
+    .eq('conversation_id', id)
+    .order('created_at', { ascending: true })
+
+  const initialMessages = (rows ?? []).map((r) => ({
+    id: r.id,
+    role: r.role,
+    parts: r.parts,
+  })) as UIMessage[]
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -31,22 +52,8 @@ export default async function ChatPage() {
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-6">
-        {!count ? (
-          <div className="rounded-xl border border-dashed border-neutral-300 bg-white p-10 text-center">
-            <p className="text-sm text-neutral-600">Henüz hazır dokümanınız yok.</p>
-            <Link
-              href="/dashboard"
-              className="mt-3 inline-block text-sm text-neutral-900 underline"
-            >
-              Doküman yükle
-            </Link>
-          </div>
-        ) : (
-          <>
-            <ConversationList />
-            <ChatClient />
-          </>
-        )}
+        <ConversationList activeId={id} />
+        <ChatClient conversationId={id} initialMessages={initialMessages} />
       </main>
     </div>
   )
