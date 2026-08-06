@@ -1,13 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import { useActionState } from 'react'
-import { login, signup } from './actions'
+import { login } from './actions'
 
 export default function LoginPage() {
-  const [loginError, loginAction, loginPending] = useActionState(login, null)
-  const [signupError, signupAction, signupPending] = useActionState(signup, null)
-  const error = loginError ?? signupError
-  const pending = loginPending || signupPending
+  const [error, action, pending] = useActionState(login, null)
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-neutral-50 p-6">
@@ -17,7 +15,7 @@ export default function LoginPage() {
           Dokümanlarınızı yükleyin, sorularınızı sorun.
         </p>
 
-        <form className="mt-6 space-y-4">
+        <form action={action} className="mt-6 space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm text-neutral-700">
               E-posta
@@ -41,7 +39,6 @@ export default function LoginPage() {
               name="password"
               type="password"
               required
-              minLength={8}
               autoComplete="current-password"
               className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900"
             />
@@ -53,22 +50,20 @@ export default function LoginPage() {
             </p>
           )}
 
-          <div className="flex gap-2 pt-2">
-            <button
-              formAction={loginAction}
-              disabled={pending}
-              className="flex-1 rounded-md bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-50"
-            >
-              {pending ? 'Bekleyin...' : 'Giriş yap'}
-            </button>
-            <button
-              formAction={signupAction}
-              disabled={pending}
-              className="flex-1 rounded-md border border-neutral-300 px-4 py-2 text-sm disabled:opacity-50"
-            >
-              Kayıt ol
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={pending}
+            className="w-full rounded-md bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-50"
+          >
+            {pending ? 'Giriş yapılıyor...' : 'Giriş yap'}
+          </button>
+
+          <p className="text-center text-sm text-neutral-500">
+            Hesabınız yok mu?{' '}
+            <Link href="/signup" className="text-neutral-900 underline">
+              Kayıt olun
+            </Link>
+          </p>
         </form>
       </div>
     </main>
