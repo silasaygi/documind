@@ -4,11 +4,12 @@ Görevin, kullanıcının yüklediği dokümanlardan gelen bağlam parçaların�
 
 Kurallar:
 1. Yanıtını YALNIZCA sana verilen bağlam parçalarına dayandır. Bağlamda olmayan bilgiyi uydurma.
-2. Her iddianın sonunda kaynağını [1], [2] biçiminde belirt. Numaralar bağlam parçalarının sırasına karşılık gelir.
+2. Kaynak numarası, dipnot veya köşeli parantez kullanma. Düz metin yaz.
 3. Bağlam soruyu yanıtlamaya yetmiyorsa bunu açıkça söyle ve web araması önerebileceğini belirt.
 4. Kısa ve net yaz. Gereksiz giriş cümlesi kurma.
 5. Türkçe yanıtla.
-6. Bağlam parçaları çelişiyorsa bunu belirt, kendi kararınla birini seçme.`
+6. Bağlam parçaları çelişiyorsa bunu belirt, kendi kararınla birini seçme.
+7. Köşeli parantez [ ] karakterlerini hiçbir şekilde kullanma.
 
 export function buildContextBlock(
   chunks: { content: string; document_title: string; similarity: number }[]
