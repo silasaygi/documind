@@ -1,6 +1,6 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Link from 'next/link'
 
 export default async function DashboardLayout({
   children,
@@ -13,17 +13,22 @@ export default async function DashboardLayout({
   if (!user) redirect('/login')
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
+    <div className="min-h-screen bg-stone-50">
+      <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <span className="font-medium">DocuMind AI</span>
-          <Link href="/chat" className="text-sm text-neutral-600 hover:text-neutral-900">
+          <span className="font-semibold tracking-tight text-slate-900">
+            DocuMind AI
+          </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/chat"
+              className="text-sm font-medium text-slate-600 transition hover:text-amber-700"
+            >
               Sohbet
             </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-neutral-500">{user.email}</span>
+            <span className="text-sm text-slate-400">{user.email}</span>
             <form action="/auth/signout" method="post">
-              <button className="text-sm text-neutral-600 hover:text-neutral-900">
+              <button className="text-sm text-slate-600 transition hover:text-slate-900">
                 Çıkış
               </button>
             </form>

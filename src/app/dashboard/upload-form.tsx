@@ -45,7 +45,7 @@ export function UploadForm() {
   const busy = pending || processing
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-5">
+    <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
       <form ref={formRef} action={action} className="flex items-center gap-3">
         <input
           type="file"
@@ -53,19 +53,19 @@ export function UploadForm() {
           accept=".pdf,.txt,.md"
           required
           disabled={busy}
-          className="flex-1 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-neutral-900 file:px-3 file:py-2 file:text-sm file:text-white"
+          className="flex-1 text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-3 file:py-2 file:text-sm file:text-white hover:file:bg-slate-800"
         />
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-50"
+          className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700 disabled:opacity-50"
         >
           {pending ? 'Yükleniyor...' : processing ? 'İşleniyor...' : 'Yükle'}
         </button>
       </form>
 
       {busy && (
-        <p className="mt-3 text-sm text-neutral-500">
+        <p className="mt-3 text-sm text-slate-500">
           {pending
             ? 'Dosya yükleniyor...'
             : 'Metin çıkarılıyor ve vektörler üretiliyor. Bu işlem dosya boyutuna göre 10-60 saniye sürebilir.'}
@@ -73,7 +73,7 @@ export function UploadForm() {
       )}
 
       {error && (
-        <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-100">
           {error}
         </p>
       )}

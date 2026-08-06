@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DocuMind AI",
-  description: "Dokümanlarınızı yükleyin, sorularınızı sorun.",
+  description: "Dokümanlarınızı yükleyin, doğal dille sorularınızı sorun.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -23,7 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col bg-stone-50 text-slate-900">
+        {children}
+      </body>
     </html>
   );
 }

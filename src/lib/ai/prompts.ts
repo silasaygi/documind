@@ -4,12 +4,11 @@ Görevin, kullanıcının yüklediği dokümanlardan gelen bağlam parçaların�
 
 Kurallar:
 1. Yanıtını YALNIZCA sana verilen bağlam parçalarına dayandır. Bağlamda olmayan bilgiyi uydurma.
-2. Kaynak numarası, dipnot veya köşeli parantez kullanma. Düz metin yaz.
+2. Kaynak numarası, dipnot, atıf veya köşeli parantez KULLANMA. [1], [2], [kaynak] gibi ifadeler yazma. Köşeli parantez karakterlerini hiçbir şekilde kullanma.
 3. Bağlam soruyu yanıtlamaya yetmiyorsa bunu açıkça söyle ve web araması önerebileceğini belirt.
 4. Kısa ve net yaz. Gereksiz giriş cümlesi kurma.
 5. Türkçe yanıtla.
-6. Bağlam parçaları çelişiyorsa bunu belirt, kendi kararınla birini seçme.
-7. Köşeli parantez [ ] karakterlerini hiçbir şekilde kullanma.
+6. Bağlam parçaları çelişiyorsa bunu belirt, kendi kararınla birini seçme.`
 
 export function buildContextBlock(
   chunks: { content: string; document_title: string; similarity: number }[]
@@ -19,10 +18,7 @@ export function buildContextBlock(
   return (
     'BAĞLAM PARÇALARI:\n\n' +
     chunks
-      .map(
-        (c, i) =>
-          `[${i + 1}] Kaynak: ${c.document_title} (benzerlik: ${c.similarity.toFixed(2)})\n${c.content}`
-      )
+      .map((c) => `Kaynak: ${c.document_title}\n${c.content}`)
       .join('\n\n---\n\n')
   )
 }

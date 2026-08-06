@@ -21,10 +21,10 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const STATUS_STYLE: Record<string, string> = {
-  pending: 'bg-neutral-100 text-neutral-600',
-  processing: 'bg-blue-50 text-blue-700',
-  ready: 'bg-green-50 text-green-700',
-  failed: 'bg-red-50 text-red-700',
+  pending: 'bg-stone-100 text-stone-600 ring-1 ring-stone-200',
+  processing: 'bg-sky-50 text-sky-700 ring-1 ring-sky-200',
+  ready: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+  failed: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
 }
 
 export function DocumentRow({ doc }: { doc: Doc }) {
@@ -38,11 +38,11 @@ export function DocumentRow({ doc }: { doc: Doc }) {
   }, [doc.status, router])
 
   return (
-    <li className="px-5 py-4">
+    <li className="px-5 py-4 transition hover:bg-stone-50">
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{doc.title}</p>
-          <p className="text-xs text-neutral-500">
+          <p className="truncate text-sm font-medium text-slate-900">{doc.title}</p>
+          <p className="text-xs text-slate-500">
             {doc.chunk_count} parça ·{' '}
             {new Date(doc.created_at).toLocaleDateString('tr-TR')}
           </p>
@@ -50,8 +50,8 @@ export function DocumentRow({ doc }: { doc: Doc }) {
 
         <div className="flex shrink-0 items-center gap-3">
           <span
-            className={`rounded-full px-2.5 py-1 text-xs ${
-              STATUS_STYLE[doc.status] ?? 'bg-neutral-100 text-neutral-600'
+            className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+              STATUS_STYLE[doc.status] ?? 'bg-stone-100 text-stone-600'
             }`}
           >
             {STATUS_LABEL[doc.status] ?? doc.status}
@@ -62,7 +62,7 @@ export function DocumentRow({ doc }: { doc: Doc }) {
               startTransition(() => deleteDocument(doc.id))
             }}
             disabled={pending}
-            className="text-xs text-neutral-500 hover:text-red-600 disabled:opacity-50"
+            className="text-xs text-slate-500 transition hover:text-rose-600 disabled:opacity-50"
           >
             Sil
           </button>
@@ -70,7 +70,7 @@ export function DocumentRow({ doc }: { doc: Doc }) {
       </div>
 
       {doc.status === 'failed' && doc.error_message && (
-        <p className="mt-2 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700">
+        <p className="mt-2 rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-700 ring-1 ring-rose-100">
           {doc.error_message}
         </p>
       )}

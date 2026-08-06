@@ -15,7 +15,7 @@ export async function ConversationList({ activeId }: { activeId?: string }) {
     <div className="mb-4 flex flex-wrap gap-2">
       <Link
         href="/chat"
-        className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs hover:bg-neutral-100"
+        className="rounded-lg border border-dashed border-stone-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-amber-400 hover:text-amber-700"
       >
         + Yeni sohbet
       </Link>
@@ -23,10 +23,10 @@ export async function ConversationList({ activeId }: { activeId?: string }) {
         <Link
           key={c.id}
           href={`/chat/${c.id}`}
-          className={`max-w-[200px] truncate rounded-md px-3 py-1.5 text-xs ${
+          className={`max-w-[200px] truncate rounded-lg px-3 py-1.5 text-xs transition ${
             c.id === activeId
-              ? 'bg-neutral-900 text-white'
-              : 'border border-neutral-200 bg-white hover:bg-neutral-100'
+              ? 'bg-slate-900 text-white'
+              : 'border border-stone-200 bg-white text-slate-600 hover:border-stone-300 hover:text-slate-900'
           }`}
         >
           {c.title}

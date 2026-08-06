@@ -8,16 +8,18 @@ export default function LoginPage() {
   const [error, action, pending] = useActionState(login, null)
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-50 p-6">
-      <div className="w-full max-w-sm rounded-xl border border-neutral-200 bg-white p-8">
-        <h1 className="text-xl font-medium">DocuMind AI</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-stone-50 to-stone-100 p-6">
+      <div className="w-full max-w-sm rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+        <h1 className="text-xl font-semibold tracking-tight text-slate-900">
+          DocuMind AI
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
           Dokümanlarınızı yükleyin, sorularınızı sorun.
         </p>
 
         <form action={action} className="mt-6 space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm text-neutral-700">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
               E-posta
             </label>
             <input
@@ -26,12 +28,15 @@ export default function LoginPage() {
               type="email"
               required
               autoComplete="email"
-              className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900"
+              className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-slate-800 focus:ring-2 focus:ring-slate-800/10"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm text-neutral-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-700"
+            >
               Şifre
             </label>
             <input
@@ -40,12 +45,12 @@ export default function LoginPage() {
               type="password"
               required
               autoComplete="current-password"
-              className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900"
+              className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-slate-800 focus:ring-2 focus:ring-slate-800/10"
             />
           </div>
 
           {error && (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-red-100">
               {error}
             </p>
           )}
@@ -53,14 +58,17 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-md bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-50"
+            className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
           >
             {pending ? 'Giriş yapılıyor...' : 'Giriş yap'}
           </button>
 
-          <p className="text-center text-sm text-neutral-500">
+          <p className="text-center text-sm text-slate-500">
             Hesabınız yok mu?{' '}
-            <Link href="/signup" className="text-neutral-900 underline">
+            <Link
+              href="/signup"
+              className="font-medium text-amber-700 underline-offset-2 hover:underline"
+            >
               Kayıt olun
             </Link>
           </p>
