@@ -22,9 +22,9 @@ export default async function ChatPage() {
             DocuMind AI
           </span>
           <div className="flex items-center gap-4 text-sm">
-            <Link
+          <Link
               href="/dashboard"
-              className="font-medium text-slate-600 transition hover:text-amber-700"
+              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
             >
               Dokümanlarım
             </Link>
