@@ -3,11 +3,11 @@
 Dokümanlarınızı yükleyip doğal dille sorgulayabileceğiniz RAG tabanlı bir asistan.
 Cevaplar yalnızca yüklenen dokümanlara dayanır; bilgi bulunamazsa model bunu açıkça söyler.
 
-**Canlı demo:** https://ADRESINI-BURAYA-YAZ.vercel.app
+**Canlı demo:** [https://ADRESINI-BURAYA-YAZ.vercel.app](https://documind-seven-delta.vercel.app/)
 
 Demo hesabı:
-- E-posta: `demo@ornek.com`
-- Şifre: `SIFRENI-BURAYA-YAZ`
+- E-posta: `deneme@gmail.com`
+- Şifre: `deneme123`
 
 ## Nasıl çalışır
 
