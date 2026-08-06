@@ -3,11 +3,6 @@
 Dokümanlarınızı yükleyip doğal dille sorgulayabileceğiniz RAG tabanlı bir asistan.
 Cevaplar yalnızca yüklenen dokümanlara dayanır; bilgi bulunamazsa model bunu açıkça söyler.
 
-**Canlı demo:** (https://documind-seven-delta.vercel.app/)
-
-Demo hesabı:
-- E-posta: `deneme@gmail.com`
-- Şifre: `deneme123`
 
 ## Nasıl çalışır
 
@@ -58,3 +53,5 @@ npm run dev
 ```
 
 Gerekli ortam değişkenleri `.env.example` dosyasında listelenmiştir.
+
+**Denemek isteyenler için,link ve kullanıcı bilgisi iletebilirim** 
