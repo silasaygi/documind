@@ -21,7 +21,6 @@ export function ChatClient({
   })
 
   const busy = status === 'streaming' || status === 'submitted'
-
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -75,27 +74,7 @@ export function ChatClient({
                       </p>
                     )
                   }
-
-                  const output = part.output as {
-                    found: boolean
-                    sources?: { index: number; title: string; similarity: number }[]
-                  }
-
-                  if (!output.found || !output.sources?.length) return null
-
-                  return (
-                    <div key={i} className="mb-3 flex flex-wrap gap-1.5">
-                      {output.sources.map((s) => (
-                        <span
-                          key={s.index}
-                          title={`Benzerlik: ${(s.similarity * 100).toFixed(0)}%`}
-                          className="rounded-md bg-neutral-100 px-2 py-1 text-xs text-neutral-600"
-                        >
-                          [{s.index}] {s.title}
-                        </span>
-                      ))}
-                    </div>
-                  )
+                  return null
                 }
 
                 return null
@@ -112,6 +91,7 @@ export function ChatClient({
             deneyin.
           </p>
         )}
+
         <div ref={bottomRef} />
       </div>
 
