@@ -3,7 +3,7 @@
 Dokümanlarınızı yükleyip doğal dille sorgulayabileceğiniz RAG tabanlı bir asistan.
 Cevaplar yalnızca yüklenen dokümanlara dayanır; bilgi bulunamazsa model bunu açıkça söyler.
 
-**Canlı demo:** [https://ADRESINI-BURAYA-YAZ.vercel.app](https://documind-seven-delta.vercel.app/)
+**Canlı demo:** (https://documind-seven-delta.vercel.app/)
 
 Demo hesabı:
 - E-posta: `deneme@gmail.com`
