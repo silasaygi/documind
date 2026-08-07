@@ -3,6 +3,7 @@
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, type UIMessage } from 'ai'
 import { useEffect, useRef, useState } from 'react'
+import { ActionButtons } from './action-buttons'
 
 export function ChatClient({
   conversationId,
@@ -69,6 +70,18 @@ export function ChatClient({
                     </p>
                   )
                 }
+
+                {message.role === 'assistant' &&
+                  status !== 'streaming' &&
+                  message.parts.some((p) => p.type === 'text') && (
+                    <ActionButtons
+                      conversationId={conversationId}
+                      content={message.parts
+                        .filter((p) => p.type === 'text')
+                        .map((p) => (p as { text: string }).text)
+                        .join('\n')}
+                    />
+                  )}
 
                 if (part.type === 'tool-searchDocuments') {
                   if (part.state !== 'output-available') {
