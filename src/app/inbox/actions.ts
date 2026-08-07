@@ -17,6 +17,44 @@ export async function approveAndSend(
 
   const supabase = await createClient()
 
+  const { data: item, error: readError } = await supabase
+    .from('inbox_items')
+    .select('id, source, external_id, sender, subject, question, draft_answer')
+    .eq('id', id)
+    .single()
+
+  if (readError || !item) return { error: 'Kayıt okunamadı.' }
+
+  const webhookUrl = process.env.N8N_APPROVE_WEBHOOK_URL
+
+  if (webhookUrl) {
+    try {
+      const res = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.DOCUMIND_API_KEY ?? '',
+        },
+        body: JSON.stringify({
+          itemId: item.id,
+          source: item.source,
+          externalId: item.external_id,
+          recipient: item.sender,
+          subject: item.subject,
+          question: item.question,
+          answer: finalAnswer,
+          edited: finalAnswer !== (item.draft_answer ?? ''),
+        }),
+      })
+
+      if (!res.ok) {
+        return { error: `Gönderim başarısız (${res.status}). Yanıt kaydedilmedi.` }
+      }
+    } catch {
+      return { error: 'n8n akışına ulaşılamadı. Yanıt kaydedilmedi.' }
+    }
+  }
+
   const { error } = await supabase
     .from('inbox_items')
     .update({
