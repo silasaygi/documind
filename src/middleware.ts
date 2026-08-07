@@ -29,7 +29,10 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname
   const isPublic =
-    path === '/login' || path === '/signup' || path.startsWith('/auth')
+    path === '/login' ||
+    path === '/signup' ||
+    path.startsWith('/auth') ||
+    path.startsWith('/api/v1')
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone()
@@ -48,6 +51,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api/v1|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

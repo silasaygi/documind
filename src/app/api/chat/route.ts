@@ -2,7 +2,7 @@ import { streamText, convertToModelMessages, stepCountIs, tool, type UIMessage }
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { searchChunks } from '@/lib/ai/search'
 import { SYSTEM_PROMPT, buildContextBlock } from '@/lib/ai/prompts'
 import type { Json } from '@/types/database.types'
@@ -15,6 +15,7 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return new Response('Yetkisiz', { status: 401 })
 
+  const supabaseAdmin = getSupabaseAdmin()
   const body = await request.json()
   const raw = body?.messages ?? []
   const messages: UIMessage[] = Array.isArray(raw) ? raw : [raw]

@@ -15,7 +15,7 @@ export async function embedChunks(chunks: string[]): Promise<number[][]> {
       providerOptions: {
         google: {
           outputDimensionality: DIMENSIONS,
-          taskType: 'RETRIEVAL_DOCUMENT',
+          
         },
       },
     })
@@ -33,7 +33,7 @@ export async function embedQuery(query: string): Promise<number[]> {
     providerOptions: {
       google: {
         outputDimensionality: DIMENSIONS,
-        taskType: 'RETRIEVAL_QUERY',
+        
       },
     },
   })

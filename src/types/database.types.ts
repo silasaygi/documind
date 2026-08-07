@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      actions: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          kind: string
+          payload: Json | null
+          source_conversation_id: string | null
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          kind: string
+          payload?: Json | null
+          source_conversation_id?: string | null
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          kind?: string
+          payload?: Json | null
+          source_conversation_id?: string | null
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actions_source_conversation_id_fkey"
+            columns: ["source_conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           created_at: string
@@ -117,6 +161,57 @@ export type Database = {
           status?: string
           storage_path?: string
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      inbox_items: {
+        Row: {
+          answered_at: string | null
+          confidence: number | null
+          created_at: string
+          draft_answer: string | null
+          external_id: string | null
+          final_answer: string | null
+          id: string
+          question: string
+          sender: string | null
+          source: string
+          sources: Json | null
+          status: string
+          subject: string | null
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string | null
+          confidence?: number | null
+          created_at?: string
+          draft_answer?: string | null
+          external_id?: string | null
+          final_answer?: string | null
+          id?: string
+          question: string
+          sender?: string | null
+          source?: string
+          sources?: Json | null
+          status?: string
+          subject?: string | null
+          user_id: string
+        }
+        Update: {
+          answered_at?: string | null
+          confidence?: number | null
+          created_at?: string
+          draft_answer?: string | null
+          external_id?: string | null
+          final_answer?: string | null
+          id?: string
+          question?: string
+          sender?: string | null
+          source?: string
+          sources?: Json | null
+          status?: string
+          subject?: string | null
           user_id?: string
         }
         Relationships: []

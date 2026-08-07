@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { extractText } from '@/lib/text/extract'
 import { chunkText } from '@/lib/text/chunk'
 import { embedChunks } from '@/lib/ai/embeddings'
@@ -10,6 +10,7 @@ export const maxDuration = 60
 
 export async function POST(request: Request) {
   const supabase = await createClient()
+  const supabaseAdmin = getSupabaseAdmin()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
 
