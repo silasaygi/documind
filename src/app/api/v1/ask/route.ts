@@ -34,18 +34,24 @@ export async function POST(request: Request) {
   const admin = getSupabaseAdmin()
   const embedding = await embedQuery(question.slice(0, 2000))
 
-  const { data: chunks, error } = await admin.rpc('match_documents_for_user', {
-    p_user_id: userId,
-    query_embedding: JSON.stringify(embedding),
-    match_threshold: MATCH_THRESHOLD,
-    match_count: MATCH_COUNT,
-  } as never)
+  const { data: chunks, error } = await (admin.rpc as unknown as (
+    fn: string,
+    args: Record<string, unknown>
+  ) => Promise<{ data: MatchDocumentsRow[] | null; error: { message: string } | null }>)(
+    'match_documents_for_user',
+    {
+      p_user_id: userId,
+      query_embedding: JSON.stringify(embedding),
+      match_threshold: MATCH_THRESHOLD,
+      match_count: MATCH_COUNT,
+    }
+  )
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const rows = (chunks ?? []) as MatchDocumentsRow[]
+  const rows = chunks ?? []
 
   if (!rows.length) {
     return NextResponse.json({
