@@ -46,59 +46,64 @@ export function ChatClient({
           </div>
         )}
 
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={message.role === 'user' ? 'flex justify-end' : ''}
-          >
+        {messages.map((message) => {
+          const metin = message.parts
+            .filter((p) => p.type === 'text')
+            .map((p) => (p as { text: string }).text)
+            .join('\n')
+            .replace(/\s*\[\d+(?:\s*,\s*\d+)*\]/g, '')
+            .replace(/ +([.,;:!?])/g, '$1')
+            .trim()
+
+          const aksiyonGoster =
+            message.role === 'assistant' && !busy && metin.length > 20
+
+          return (
             <div
-              className={
-                message.role === 'user'
-                  ? 'max-w-[80%] rounded-2xl bg-slate-900 px-4 py-2.5 text-sm text-white shadow-sm'
-                  : 'max-w-[85%] rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-700 shadow-sm'
-              }
+              key={message.id}
+              className={message.role === 'user' ? 'flex justify-end' : ''}
             >
-              {message.parts.map((part, i) => {
-                if (part.type === 'text') {
-                  const clean = part.text
-                    .replace(/\s*\[\d+(?:\s*,\s*\d+)*\]/g, '')
-                    .replace(/ +([.,;:!?])/g, '$1')
-
-                  return (
-                    <p key={i} className="whitespace-pre-wrap">
-                      {clean}
-                    </p>
-                  )
+              <div
+                className={
+                  message.role === 'user'
+                    ? 'max-w-[80%] rounded-2xl bg-slate-900 px-4 py-2.5 text-sm text-white shadow-sm'
+                    : 'max-w-[85%] rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-700 shadow-sm'
                 }
+              >
+                {message.parts.map((part, i) => {
+                  if (part.type === 'text') {
+                    const temiz = part.text
+                      .replace(/\s*\[\d+(?:\s*,\s*\d+)*\]/g, '')
+                      .replace(/ +([.,;:!?])/g, '$1')
 
-                {message.role === 'assistant' &&
-                  status !== 'streaming' &&
-                  message.parts.some((p) => p.type === 'text') && (
-                    <ActionButtons
-                      conversationId={conversationId}
-                      content={message.parts
-                        .filter((p) => p.type === 'text')
-                        .map((p) => (p as { text: string }).text)
-                        .join('\n')}
-                    />
-                  )}
-
-                if (part.type === 'tool-searchDocuments') {
-                  if (part.state !== 'output-available') {
                     return (
-                      <p key={i} className="mb-2 text-xs text-slate-400">
-                        Dokümanlarda aranıyor...
+                      <p key={i} className="whitespace-pre-wrap">
+                        {temiz}
                       </p>
                     )
                   }
-                  return null
-                }
 
-                return null
-              })}
+                  if (part.type === 'tool-searchDocuments') {
+                    if (part.state !== 'output-available') {
+                      return (
+                        <p key={i} className="mb-2 text-xs text-slate-400">
+                          Dokümanlarda aranıyor...
+                        </p>
+                      )
+                    }
+                    return null
+                  }
+
+                  return null
+                })}
+
+                {aksiyonGoster && (
+                  <ActionButtons conversationId={conversationId} content={metin} />
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         {busy && <p className="text-sm text-slate-400">Yanıt hazırlanıyor...</p>}
 
